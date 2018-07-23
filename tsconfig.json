@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+      "baseUrl": ".",
+      "outDir": "./dist/",
+      "module": "commonjs",
+      "lib": ["es6", "dom"],
+      "sourceMap": true,
+      "jsx": "react",
+      "rootDir": "app",
+    },
+    "exclude": [
+      "node_modules",
+      "dist",
+      "scripts",
+      "acceptance-tests",
+      "webpack.config.js",
+      "jest",
+      "src/setupTests.ts",
+    ]
+  }
+  

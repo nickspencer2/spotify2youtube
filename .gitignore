@@ -1,0 +1,12 @@
+# packages
+node_modules
+
+# build
+dist
+release-builds
+
+# documentation
+todo.txt
+
+# credentials
+*secret*

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { OAuth2Client } from "google-auth-library";
-import { google } from "googleapis";
+import { google, youtube_v3 } from "googleapis";
 import { HomePage } from "./HomePage";
 import { SpotifyPlaylistPage } from "./SpotifyPlaylistPage";
 import { ConvertPage } from "./ConvertPage";
@@ -14,6 +14,8 @@ interface AppState {
     spotifyClient: any;
     spotifyPlaylist: any;
     spotifyUser: any;
+    youtubeUser: any;
+    spotifyPlaylists: any[];
     spotifyPlaylistTracks: any[];
     currentPage: string;
 }
@@ -24,6 +26,8 @@ export class App extends React.Component<AppProps, AppState> {
         spotifyClient: null,
         spotifyPlaylist: null,
         spotifyUser: null,
+        youtubeUser: null,
+        spotifyPlaylists: null,
         spotifyPlaylistTracks: null,
         currentPage: "LandingPage"
     };
@@ -47,10 +51,12 @@ export class App extends React.Component<AppProps, AppState> {
     }
 
     handleSpotifyPlaylistClick = (playlist: any, spotifyUser: any) => {
-        this.setState({
-            spotifyPlaylist: playlist,
-            spotifyUser: spotifyUser,
-            currentPage: "SpotifyPlaylistPage"
+        this.setState((prevState: AppState) => {
+            return {
+                spotifyPlaylist: playlist,
+                spotifyPlaylistTracks: prevState.spotifyPlaylist ?  (playlist.id == prevState.spotifyPlaylist.id ? prevState.spotifyPlaylistTracks : null) : prevState.spotifyPlaylist,
+                currentPage: "SpotifyPlaylistPage"
+            };
         });
     }
 
@@ -74,6 +80,30 @@ export class App extends React.Component<AppProps, AppState> {
         });
     }
 
+    setYoutubeUser = (user: youtube_v3.Schema$ChannelListResponse) => {
+        this.setState({
+            youtubeUser: user
+        });
+    }
+
+    setSpotifyUser = (user: any) => {
+        this.setState({
+            spotifyUser: user
+        });
+    }
+
+    setSpotifyPlaylists = (playlists: any[]) => {
+        this.setState({
+            spotifyPlaylists: playlists
+        })
+    }
+
+    setSpotifyPlaylistTracks = (tracks: any[]) => {
+        this.setState({
+            spotifyPlaylistTracks: tracks
+        });
+    }
+
     render() {
         if(this.state.currentPage == "ConvertPage") {
             return (
@@ -92,7 +122,8 @@ export class App extends React.Component<AppProps, AppState> {
                     spotifyUser={this.state.spotifyUser}
                     onConvertClick={this.onConvertClick}
                     tracks={this.state.spotifyPlaylistTracks}
-                    onBackClick={this.onSpotifyPlaylistBackClick}/>
+                    onBackClick={this.onSpotifyPlaylistBackClick}
+                    setTracks={this.setSpotifyPlaylistTracks}/>
             );
         }
         else if(this.state.currentPage == "HomePage") {
@@ -100,7 +131,13 @@ export class App extends React.Component<AppProps, AppState> {
                 <HomePage
                     googleClient={this.state.googleClient}
                     spotifyClient={this.state.spotifyClient}
-                    handlePlaylistClick={this.handleSpotifyPlaylistClick}/>
+                    handlePlaylistClick={this.handleSpotifyPlaylistClick}
+                    youtubeUser={this.state.youtubeUser}
+                    spotifyUser={this.state.spotifyUser}
+                    setYoutubeUser={this.setYoutubeUser}
+                    setSpotifyUser={this.setSpotifyUser}
+                    playlists={this.state.spotifyPlaylists}
+                    setPlaylists={this.setSpotifyPlaylists}/>
             );
         }
         else {

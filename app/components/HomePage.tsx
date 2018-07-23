@@ -6,51 +6,54 @@ import { SpotifyPlaylistList } from "./SpotifyPlaylistList";
 interface Props {
     googleClient: OAuth2Client;
     spotifyClient: any;
+    spotifyUser: any;
+    youtubeUser: any;
     handlePlaylistClick: (playlist: any, spotifyUser: any) => void;
+    setSpotifyUser: (spotifyUser: any) => void;
+    setYoutubeUser: (youtubeUser: youtube_v3.Schema$ChannelListResponse) => void;
+    playlists: any[];
+    setPlaylists: (playlists: any[]) => void;
 }
 
-interface State {
-    currentYoutubeUser: youtube_v3.Schema$ChannelListResponse;
-    currentSpotifyUser: any;
-}
-
-export class HomePage extends React.Component<Props, State> {
-    
-    state: State = {
-        currentYoutubeUser: null,
-        currentSpotifyUser: null
-    };
-
+export class HomePage extends React.Component<Props> {
     async componentWillMount() {
-        const currentYoutubeUser = (await google.youtube("v3").channels.list({
-            auth: this.props.googleClient,
-            part: "snippet,contentDetails,statistics",
-            mine: true
-        })).data;
-        const currentSpotifyUser = await this.props.spotifyClient.getMe();
-        this.setState({
-            currentYoutubeUser: currentYoutubeUser,
-            currentSpotifyUser: currentSpotifyUser
-        });
-        const spotifyPlaylists = await this.props.spotifyClient.getUserPlaylists(currentSpotifyUser.body.id);
+        if (!this.props.spotifyUser) {
+            const currentSpotifyUser = await this.props.spotifyClient.getMe();
+            this.props.setSpotifyUser(currentSpotifyUser);
+            console.log("Got Spotify user");
+        }
+        if(!this.props.youtubeUser) {
+            const currentYoutubeUser = (await google.youtube("v3").channels.list({
+                auth: this.props.googleClient,
+                part: "snippet,contentDetails,statistics",
+                mine: true
+            })).data;
+            this.props.setYoutubeUser(currentYoutubeUser);
+            console.log("Got Youtube user");
+        }
     }
 
     render() {
         return (
             <div className="container-fluid">
                 <div className="row">
-                    {(this.state.currentYoutubeUser && this.state.currentSpotifyUser) &&
+                    {(this.props.youtubeUser && this.props.spotifyUser) &&
                     <div className="col-sm">
                         <h2>
-                            Logged into Youtube as {JSON.stringify(this.state.currentYoutubeUser.items![0].snippet!.title)}
+                            Logged into Youtube as {JSON.stringify(this.props.youtubeUser.items![0].snippet!.title)}
                         </h2>
                         <h2>
-                            Logged into Spotify as {JSON.stringify(this.state.currentSpotifyUser.body.display_name)}
+                            Logged into Spotify as {JSON.stringify(this.props.spotifyUser.body.display_name)}
                         </h2>
                     </div>}
                 </div>
-                {this.state.currentSpotifyUser ? 
-                    <SpotifyPlaylistList handlePlaylistClick={this.props.handlePlaylistClick} spotifyClient={this.props.spotifyClient} spotifyUser={this.state.currentSpotifyUser}/>:
+                {this.props.spotifyUser ? 
+                    <SpotifyPlaylistList
+                        handlePlaylistClick={this.props.handlePlaylistClick}
+                        spotifyClient={this.props.spotifyClient}
+                        spotifyUser={this.props.spotifyUser}
+                        playlists={this.props.playlists}
+                        setPlaylists={this.props.setPlaylists}/>:
                     <div className="row">
                         <p>Loading current Spotify user...</p>
                     </div>

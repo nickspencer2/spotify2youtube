@@ -4,43 +4,46 @@ interface Props {
     spotifyClient: any;
     spotifyUser: any;
     handlePlaylistClick: (playlist: any, spotifyUser: any) => void;
+    playlists: any[];
+    setPlaylists: (playlists: any[]) => void;
 }
 
 interface State {
-    playlists: any[];
     results: any[];
     filter: string;
 }
 
 export class SpotifyPlaylistList extends React.Component<Props, State> {
-
     state: State = {
-        playlists: null,
-        filter: "",
-        results: []
-    };
+        results: this.props ? this.props.playlists || [] : [],
+        filter: ""
+    }
 
     async componentWillMount() {
-        const playlists = [];
-        let playlistsData = await this.props.spotifyClient.getUserPlaylists(this.props.spotifyUser.body.id);
-        playlists.push(...playlistsData.body.items);
-        while (playlistsData.body.next) {
-            playlistsData = await this.props.spotifyClient.getUserPlaylists(this.props.spotifyUser.body.id, {
-                offset: playlistsData.body.offset + playlistsData.body.limit
-            });
+        if (!this.props.playlists) {
+            const playlists = [];
+            let playlistsData = await this.props.spotifyClient.getUserPlaylists(this.props.spotifyUser.body.id);
             playlists.push(...playlistsData.body.items);
+            while (playlistsData.body.next) {
+                playlistsData = await this.props.spotifyClient.getUserPlaylists(this.props.spotifyUser.body.id, {
+                    offset: playlistsData.body.offset + playlistsData.body.limit
+                });
+                playlists.push(...playlistsData.body.items);
+            }
+            this.setState({
+                results: playlists,
+                filter: ""
+            });
+            this.props.setPlaylists(playlists);
+            console.log("Got list of Spotify user's playlists.");
         }
-        this.setState({
-            playlists: playlists,
-            results: playlists
-        });
     }
 
     handleInputChange = (filter: string) => {
         this.setState((prevState: State) => {
             return {
                 filter: filter,
-                results: prevState.playlists.filter((playlist: any) => {
+                results: this.props.playlists.filter((playlist: any) => {
                     return playlist.name.toUpperCase().indexOf(filter.toUpperCase()) > -1;
                 })
             }
@@ -48,8 +51,8 @@ export class SpotifyPlaylistList extends React.Component<Props, State> {
     }
 
     render() {
-        return (
-            this.state.playlists ?
+        if (this.props.playlists) {
+            return (
                 <div>
                     <div className="row">
                         <div className="col-sm">
@@ -79,12 +82,18 @@ export class SpotifyPlaylistList extends React.Component<Props, State> {
                             }
                         </div>
                     </div>
-                </div> :
+                </div>
+            );
+        }
+        else {
+            console.log("playlists is null");
+            return (
                 <div className="row">
                     <div className="col-sm">
                         <p>Loading Spotify playlists...</p>
                     </div>
                 </div>
-        );
+            );
+        }
     }
 }

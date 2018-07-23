@@ -6,14 +6,11 @@ interface Props {
     spotifyUser: any;
     onConvertClick: (playlist: any, tracks: any[]) => void;
     tracks: any[] | null;
+    setTracks: (tracks: any[]) => void;
     onBackClick: () => void;
 }
 
-interface State {
-    tracks: any[];
-}
-
-export class SpotifyPlaylistPage extends React.Component<Props, State> {
+export class SpotifyPlaylistPage extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
         this.state = {
@@ -32,14 +29,12 @@ export class SpotifyPlaylistPage extends React.Component<Props, State> {
                 });
                 tracks.push(...tracksData.body.items);
             }
-            this.setState({
-                tracks: tracks
-            });
+            this.props.setTracks(tracks);
         }
     }
 
     render() {
-        if (this.state.tracks) {
+        if (this.props.tracks) {
             return (
                 <div className="container-fluid">
                     <div className="row">
@@ -52,13 +47,13 @@ export class SpotifyPlaylistPage extends React.Component<Props, State> {
                             <h2>{this.props.playlist.name}</h2>
                         </div>
                         <div className="col-sm">
-                            <button type="button" className="btn btn-primary" onClick={e => { this.props.onConvertClick(this.props.playlist, this.state.tracks) }}>Convert to Youtube playlist</button>
+                            <button type="button" className="btn btn-primary" onClick={e => { this.props.onConvertClick(this.props.playlist, this.props.tracks) }}>Convert to Youtube playlist</button>
                         </div>
                     </div>
                     <div className="row">
                         <div className="col-sm">
                             {
-                                this.state.tracks.map((track: any, index: number) =>
+                                this.props.tracks.map((track: any, index: number) =>
                                     <button
                                         key={`PlaylistButton-${index}`}
                                         type="button"

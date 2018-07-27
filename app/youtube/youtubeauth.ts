@@ -15,7 +15,7 @@ const TOKEN_PATH = TOKEN_DIR + "youtube-token.json";
 //Load client secrets from a local file.
 export function start(callbacks: ((client: OAuth2Client) => any)[]) {
     try {
-        const clientSecretFile = fs.readFileSync("./google_client_secret.json"); // Path related to webpack output, not .ts file
+        const clientSecretFile = fs.readFileSync("./google_credentials.json"); // Path related to webpack output, not .ts file
         authorize(JSON.parse(clientSecretFile.toString()), callbacks)
     } catch (err) {
         console.log("Error loading client secret file: " + err);
@@ -25,10 +25,12 @@ export function start(callbacks: ((client: OAuth2Client) => any)[]) {
 function authorize(clientSecretFile: any, callbacks: ((client: OAuth2Client) => any)[]) {
     console.log("ClientSecret: ");
     console.log(clientSecretFile);
-    let clientSecret = clientSecretFile.web.client_secret;
     let clientId = clientSecretFile.web.client_id;
     let redirectUrl = clientSecretFile.web.redirect_uris[0];
-    let oauth2Client = new OAuth2(clientId, clientSecret, redirectUrl);
+    let oauth2Client = new OAuth2({
+        clientId: clientId,
+        redirectUri: redirectUrl
+    });
 
     //Check if we have previously stored a token
     fs.readFile(TOKEN_PATH, function(err, token) {
@@ -43,7 +45,7 @@ function authorize(clientSecretFile: any, callbacks: ((client: OAuth2Client) => 
 
 function getNewToken(oauth2Client: OAuth2Client, callbacks: ((client: OAuth2Client) => any)[]) {
     let authUrl = oauth2Client.generateAuthUrl({
-        access_type: "offline",
+        access_type: "offline", // Should this be online? With offline, it returns a refresh token on first authentication.
         scope: SCOPES
     });
     ipcRenderer.send("youtube:login", authUrl);

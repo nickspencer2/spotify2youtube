@@ -25,7 +25,11 @@ function createWindow () {
   mainWindow.maximize();
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
+
+  mainWindow.webContents.on("will-navigate", function(event, newUrl) {
+    console.log(newUrl);
+  });
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
@@ -80,6 +84,19 @@ function createSpotifyLoginWindow(authUrl) {
   });
 
   spotifyLoginWindow.loadURL(authUrl);
+
+  spotifyLoginWindow.webContents.on("will-navigate", function(event, newUrl) {
+    console.log(newUrl);
+  });
+
+  /*Spotify uses hash fragments to send tokens, one way to get these is to send an event in main.ts when a redirect happens matching our redirect_uri,
+  then parse it (happens in spotifyauth.ts) to retain the hash fragment.
+  See https://developer.spotify.com/documentation/general/guides/authorization-guide/#implicit-grant-flow .*/
+  spotifyLoginWindow.webContents.on('did-get-redirect-request', (event, oldUrl, newUrl: string) => {
+    if (newUrl.indexOf("localhost:8888/spotifycallback") > -1) {
+      mainWindow.webContents.send("spotify:loggedin", newUrl);
+    }
+  })
 
   spotifyLoginWindow.on("close", () => {
     spotifyLoginWindow = null;

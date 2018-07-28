@@ -28,29 +28,7 @@ export function start(callbacks: ((client) => any)[]) {
             responseObject[paramKeyValue[0]] = paramKeyValue[1];
         });
         spotifyApi.setAccessToken(responseObject["access_token"]);
-        // spotifyApi.setRefreshToken(responseObject["refresh_token"]);
+        // spotifyApi.setRefreshToken(responseObject["refresh_token"]); // No refresh token is returned when using "Implicit Grant"
         callbacks.forEach((callback) => callback(spotifyApi));
     });
-    // Below is commented because we can't obtain the hash fragment in 'server' requests sent to express, which is where Spotify sends the access token in Implicit Grant
-    /*expressApp.get("/spotifycallback", async (req, res) => {
-        const query = req.query;
-        console.log("req:");
-        console.log(req);
-        console.log("req.body:");
-        console.log(req.body);
-        if (query.error) {
-            console.log("Error obtaining authorization for Spotify: " + query.error);
-        } else {
-            try {
-                const data = await spotifyApi.authorizationCodeGrant(query.code);
-                spotifyApi.setAccessToken(data.body["access_token"]);
-                spotifyApi.setRefreshToken(data.body["refresh_token"]);
-                expressServer.close();
-                callbacks.forEach((callback) => callback(spotifyApi));
-            } catch (err) {
-                console.log("Error obtaining Spotify token2:", err);
-            }
-        }
-    });
-    expressServer.listen(8888);*/
 }

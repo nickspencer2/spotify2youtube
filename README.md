@@ -41,7 +41,11 @@ Under "Create an OAuth 2.0 client ID", enter a suitable name. Under bundle ID, e
 
 Under "Set up the OAuth 2.0 consent screen", select your email address and enter a name you will recognize. For me, I simply entered "Spotify2Youtube". Click "I'll do this later".
 
-On the credentials screen, copy the client ID of your OAuth2 client. Open the "google_credentials.template.json" file in the cloned project. Paste the client ID inside the quotes on the right side of the colon after "client_id". Save the file and rename it to "google_credentials.json". 
+On the credentials screen, copy the client ID of your OAuth2 client. Open the "google_credentials.template.json" file in a text editor in the cloned project. Paste the client ID inside the quotes on the right side of the colon after "client_id". Save the file and rename it to "google_credentials.json". 
+
+### Note
+
+For some reason, if a user uses an account that hasn't used youtube before for creating playlists (just a google account), then the Youtube API responds with an unauthorized response. 
 
 ## Registering with Spotify
 
@@ -49,7 +53,7 @@ Navigate to https://developer.spotify.com/dashboard and log in. Accept the terms
 
 Once you are redirected to your app's page, click "Edit Settings". Under redirect URIs, enter "http://localhost:8888/spotifycallback" and click "Add" then "Save". 
 
-Copy the Client ID. Open the "spotify_credentials.template.json" file in the cloned project. Past the client ID inside the quotes on the right side of the colon after "client_id". Save the file and rename it to "spotify_credentials.json".
+Copy the Client ID. Open the "spotify_credentials.template.json" file in a text editor in the cloned project. Past the client ID inside the quotes on the right side of the colon after "client_id". Save the file and rename it to "spotify_credentials.json".
 
 # Running
 

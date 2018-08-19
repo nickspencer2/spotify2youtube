@@ -107,6 +107,14 @@ ipcMain.on("youtube:login", (event, authUrl) => {
   createYoutubeLoginWindow(authUrl);
 });
 
+ipcMain.on("youtube:loggedin", () => {
+  youtubeLoginWindow.close();
+});
+
 ipcMain.on("spotify:login", (event, authUrl) => {
   createSpotifyLoginWindow(authUrl);
+});
+
+ipcMain.on("spotify:loggedin", () => {
+  spotifyLoginWindow.close();
 });

@@ -35,7 +35,6 @@ export class SpotifyPlaylistList extends React.Component<Props, State> {
                 filter: ""
             });
             this.props.setPlaylists(playlists);
-            console.log("Got list of Spotify user's playlists.");
         }
     }
 
@@ -86,7 +85,6 @@ export class SpotifyPlaylistList extends React.Component<Props, State> {
             );
         }
         else {
-            console.log("playlists is null");
             return (
                 <div className="row">
                     <div className="col-sm">

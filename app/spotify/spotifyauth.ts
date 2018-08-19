@@ -1,6 +1,3 @@
-import * as express from "express";
-const expressApp = express();
-const expressServer = require("http").createServer(expressApp);
 const SpotifyWebApi = require('spotify-web-api-node');
 const { client_id, /*client_secret,*/ redirect_uris } = require("../../spotify_client_secret.json");
 const { ipcRenderer } = (window["require"])('electron');
@@ -13,7 +10,6 @@ export function start(callbacks: ((client) => any)[]) {
         redirectUri: redirect_uris[0]
     });
     const authorizeUrl = "https://accounts.spotify.com/authorize?client_id=" + client_id + "&redirect_uri=http%3A%2F%2Flocalhost%3A8888%2Fspotifycallback&scope=user-read-private%20user-read-email&response_type=token&state=123"
-    console.log("authorizeUrl: " + authorizeUrl);
     ipcRenderer.send("spotify:login", authorizeUrl);
 
     /*Spotify uses hash fragments to send tokens, one way to get these is to send an event in main.ts when a redirect happens matching our redirect_uri, 
@@ -28,6 +24,7 @@ export function start(callbacks: ((client) => any)[]) {
             responseObject[paramKeyValue[0]] = paramKeyValue[1];
         });
         spotifyApi.setAccessToken(responseObject["access_token"]);
+        ipcRenderer.send("spotify:loggedin", {});
         // spotifyApi.setRefreshToken(responseObject["refresh_token"]); // No refresh token is returned when using "Implicit Grant"
         callbacks.forEach((callback) => callback(spotifyApi));
     });

@@ -23,24 +23,13 @@ export function start(callbacks: ((client: OAuth2Client) => any)[]) {
 }
 
 function authorize(clientSecretFile: any, callbacks: ((client: OAuth2Client) => any)[]) {
-    console.log("ClientSecret: ");
-    console.log(clientSecretFile);
     let clientId = clientSecretFile.web.client_id;
     let redirectUrl = clientSecretFile.web.redirect_uris[0];
     let oauth2Client = new OAuth2({
         clientId: clientId,
         redirectUri: redirectUrl
     });
-
-    //Check if we have previously stored a token
-    fs.readFile(TOKEN_PATH, function(err, token) {
-        if (err) {
-            getNewToken(oauth2Client, callbacks);
-        } else {
-            oauth2Client.credentials = JSON.parse(token.toString());
-            callbacks.forEach((callback) => callback(oauth2Client));
-        }
-    });
+    getNewToken(oauth2Client, callbacks);
 }
 
 function getNewToken(oauth2Client: OAuth2Client, callbacks: ((client: OAuth2Client) => any)[]) {
@@ -60,6 +49,7 @@ function getNewToken(oauth2Client: OAuth2Client, callbacks: ((client: OAuth2Clie
                 const token = (await oauth2Client.getToken(code)).tokens;
                 oauth2Client.credentials = token;
                 expressServer.close();
+                ipcRenderer.send("youtube:loggedin", {});
                 callbacks.forEach((callback) => callback(oauth2Client));
             } catch (err) {
                 console.log("Error while trying to retrieve youtube access token: " + err);

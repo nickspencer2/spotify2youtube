@@ -1,8 +1,8 @@
 {
-  "name": "youtubeapi",
+  "name": "Spotify2Youtube",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./dist/main.js",
   "dependencies": {
     "electron": "^2.0.5",
     "electron-packager": "^12.1.0",
@@ -29,7 +29,9 @@
   "scripts": {
     "start": "tsc && electron ./dist/main.js",
     "webpack-cli": "webpack-cli",
-    "package-win": "electron-packager . --overwrite --asar=true --platform=win32 --arch=ia32 --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"youtubeapi\""
+    "package-win": "electron-packager . --overwrite --asar=true --extra-resource=\"google_credentials.json\" --extra-resource=\"spotify_credentials.json\" --platform=win32 --arch=ia32 --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Spotify2Youtube\"",
+    "package-mac": "electron-packager . --overwrite --extra-resource=\"google_credentials.json\" --extra-resource=\"spotify_credentials.json\" --platform=darwin --arch=x64 --prune=true --out=release-builds",
+    "package-linux": "electron-packager . Spotify2Youtube --overwrite --asar=true --extra-resource=\"google_credentials.json\" --extra-resource=\"spotify_credentials.json\" --platform=linux --arch=x64 --prune=true --out=release-builds"
   },
   "author": "",
   "license": "ISC"

@@ -1,7 +1,7 @@
 import * as React from "react";
-import { start as youtubeAuthStart } from "../youtube/youtubeauth";
-import { start as spotifyAuthStart } from "../spotify/spotifyauth";
-import { OAuth2Client } from "../../node_modules/google-auth-library";
+import { start as youtubeAuthStart } from "../youtubeauth";
+import { start as spotifyAuthStart } from "../spotifyauth";
+import { OAuth2Client } from "google-auth-library";
 
 interface Props {
     youtubeAuthorized: (client: OAuth2Client) => void;

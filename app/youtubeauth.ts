@@ -6,6 +6,7 @@ const expressApp = express();
 const expressServer = require("http").createServer(expressApp);
 const { ipcRenderer } = (window["require"])('electron');
 const OAuth2 = google.auth.OAuth2;
+const clientSecretFile = require("../google_credentials.json");
 
 const SCOPES = ["https://www.googleapis.com/auth/youtube"];
 const TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
@@ -15,8 +16,7 @@ const TOKEN_PATH = TOKEN_DIR + "youtube-token.json";
 //Load client secrets from a local file.
 export function start(callbacks: ((client: OAuth2Client) => any)[]) {
     try {
-        const clientSecretFile = fs.readFileSync("./google_credentials.json"); // Path related to webpack output, not .ts file
-        authorize(JSON.parse(clientSecretFile.toString()), callbacks)
+        authorize(clientSecretFile, callbacks);
     } catch (err) {
         console.log("Error loading client secret file: " + err);
     }

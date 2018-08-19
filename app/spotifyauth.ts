@@ -1,5 +1,5 @@
 const SpotifyWebApi = require('spotify-web-api-node');
-const { client_id, /*client_secret,*/ redirect_uris } = require("../../spotify_client_secret.json");
+const { client_id, redirect_uris } = require("../spotify_credentials.json");
 const { ipcRenderer } = (window["require"])('electron');
 
 const scopes = ["user-read-private", "user-read-email", "playlist-read-collaborative", "playlist-read-private"];

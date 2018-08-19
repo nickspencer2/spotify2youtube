@@ -1,5 +1,5 @@
 import * as React from "react";
-import { OAuth2Client } from "../../node_modules/google-auth-library";
+import { OAuth2Client } from "google-auth-library";
 import { google, youtube_v3 } from "googleapis";
 import { SpotifyPlaylistList } from "./SpotifyPlaylistList";
 

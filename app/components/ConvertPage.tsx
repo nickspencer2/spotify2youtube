@@ -56,7 +56,9 @@ export class ConvertPage extends React.Component<Props, State> {
                     snippet: {
                         title: this.state["playlistName"],
                         description: this.state["playlistDescription"],
-                        privacyStatus: this.state["privacyStatus"] ? "public" : "private"
+                    },
+                    status: {
+                        privacyStatus: this.state["playlistPublic"] ? "public" : "private"
                     }
                 }
             } as youtube_v3.Params$Resource$Playlists$Insert);

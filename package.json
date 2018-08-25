@@ -12,7 +12,7 @@
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "reactstrap": "^6.3.0",
-    "spotify-web-api-node": "^3.1.1",
+    "spotify-web-api-node": "git+https://github.com/thelinmichael/spotify-web-api-node.git",
     "typescript": "^2.9.2",
     "webpack": "^4.16.1"
   },

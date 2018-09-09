@@ -22,7 +22,7 @@ export class HomePage extends React.Component<Props> {
             this.props.setSpotifyUser(currentSpotifyUser);
             console.log("Got Spotify user");
         }
-        if(!this.props.youtubeUser) {
+        if (!this.props.youtubeUser) {
             const currentYoutubeUser = (await google.youtube("v3").channels.list({
                 auth: this.props.googleClient,
                 part: "snippet,contentDetails,statistics",
@@ -36,24 +36,13 @@ export class HomePage extends React.Component<Props> {
     render() {
         return (
             <div className="container-fluid">
-                <div className="row">
-                    {(this.props.youtubeUser && this.props.spotifyUser) &&
-                    <div className="col-sm">
-                        <h2>
-                            Logged into Youtube as {JSON.stringify(this.props.youtubeUser.items![0].snippet!.title)}
-                        </h2>
-                        <h2>
-                            Logged into Spotify as {JSON.stringify(this.props.spotifyUser.body.display_name)}
-                        </h2>
-                    </div>}
-                </div>
-                {this.props.spotifyUser ? 
+                {this.props.spotifyUser ?
                     <SpotifyPlaylistList
                         handlePlaylistClick={this.props.handlePlaylistClick}
                         spotifyClient={this.props.spotifyClient}
                         spotifyUser={this.props.spotifyUser}
                         playlists={this.props.playlists}
-                        setPlaylists={this.props.setPlaylists}/>:
+                        setPlaylists={this.props.setPlaylists} /> :
                     <div className="row">
                         <p>Loading current Spotify user...</p>
                     </div>

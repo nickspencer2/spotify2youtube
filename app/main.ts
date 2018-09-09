@@ -27,10 +27,6 @@ function createWindow () {
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
 
-  mainWindow.webContents.on("will-navigate", function(event, newUrl) {
-    console.log(newUrl);
-  });
-
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
     // Dereference the window object, usually you would store windows
@@ -84,10 +80,6 @@ function createSpotifyLoginWindow(authUrl) {
   });
 
   spotifyLoginWindow.loadURL(authUrl);
-
-  spotifyLoginWindow.webContents.on("will-navigate", function(event, newUrl) {
-    console.log(newUrl);
-  });
 
   /*Spotify uses hash fragments to send tokens, one way to get these is to send an event in main.ts when a redirect happens matching our redirect_uri,
   then parse it (happens in spotifyauth.ts) to retain the hash fragment.

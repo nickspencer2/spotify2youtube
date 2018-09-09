@@ -5,6 +5,7 @@ import { HomePage } from "./HomePage";
 import { SpotifyPlaylistPage } from "./SpotifyPlaylistPage";
 import { ConvertPage } from "./ConvertPage";
 import { LandingPage } from "./LandingPage";
+import { Header } from "./Header";
 
 interface AppProps {
 }
@@ -105,17 +106,17 @@ export class App extends React.Component<AppProps, AppState> {
     }
 
     render() {
+        let currentPage;
         if(this.state.currentPage == "ConvertPage") {
-            return (
+            currentPage =
                 <ConvertPage
                     spotifyPlaylist={this.state.spotifyPlaylist}
                     spotifyTracks={this.state.spotifyPlaylistTracks}
                     googleClient={this.state.googleClient}
                     onBackClick={this.onConvertBackClick}/>
-            );
         }
         else if(this.state.currentPage == "SpotifyPlaylistPage") {
-            return (
+            currentPage = 
                 <SpotifyPlaylistPage
                     playlist={this.state.spotifyPlaylist}
                     spotifyClient={this.state.spotifyClient}
@@ -124,10 +125,9 @@ export class App extends React.Component<AppProps, AppState> {
                     tracks={this.state.spotifyPlaylistTracks}
                     onBackClick={this.onSpotifyPlaylistBackClick}
                     setTracks={this.setSpotifyPlaylistTracks}/>
-            );
         }
         else if(this.state.currentPage == "HomePage") {
-            return (
+            currentPage = 
                 <HomePage
                     googleClient={this.state.googleClient}
                     spotifyClient={this.state.spotifyClient}
@@ -138,14 +138,20 @@ export class App extends React.Component<AppProps, AppState> {
                     setSpotifyUser={this.setSpotifyUser}
                     playlists={this.state.spotifyPlaylists}
                     setPlaylists={this.setSpotifyPlaylists}/>
-            );
         }
         else {
-            return (
+            currentPage = 
                 <LandingPage
                     youtubeAuthorized={this.youtubeAuthorized}
                     spotifyAuthorized={this.spotifyAuthorized}/>    
-            );
         }
+        return (
+            <div>
+                <Header youtubeUser={this.state.youtubeUser} spotifyUser={this.state.spotifyUser} />
+                <div className="container">
+                    {currentPage}
+                </div>
+            </div>
+        )
     }
 }

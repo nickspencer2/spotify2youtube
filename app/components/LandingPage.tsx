@@ -37,14 +37,42 @@ export class LandingPage extends React.Component<Props, State> {
 
     render() {
         return (
-            <div className="container-fluid">
+            <div className="container-fluid text-center">
                 <div className="row">
-                    <div className="col-sm">
-                        <button type="button" className="btn btn-primary" onClick={e => this.handleGoogleAuthClick()} disabled={this.state.googleClient != null}>Authorize Youtube</button>
+                    <div className="col">
+                        <h1>Spotify to Youtube</h1>
                     </div>
-                    <div className="col-sm">
-                        <button type="button" className="btn btn-primary" onClick={e => this.handleSpotifyAuthClick()} disabled={this.state.spotifyClient != null}>Authorize Spotify</button>
+                </div>
+                <div className="row">
+                    <div className="col" />
+                    <div className="col">
+                        <button
+                            type="button"
+                            className="btn btn-outline-danger"
+                            onClick={e => this.handleGoogleAuthClick()}
+                            disabled={this.state.googleClient != null}
+                            style={{width: "83.27px"}}>
+                            <i className="fab fa-youtube"></i>
+                            Login
+                        </button>
                     </div>
+                    <div className="col" />
+                </div>
+                <hr />
+                <div className="row">
+                    <div className="col" />
+                    <div className="col">
+                        <button
+                            type="button"
+                            className="btn btn-outline-success"
+                            onClick={e => this.handleSpotifyAuthClick()}
+                            disabled={this.state.spotifyClient != null}
+                            style={{width: "83.27px"}}>
+                            <i className="fab fa-spotify"></i>
+                            Login
+                        </button>
+                    </div>
+                    <div className="col" />
                 </div>
             </div>
         );

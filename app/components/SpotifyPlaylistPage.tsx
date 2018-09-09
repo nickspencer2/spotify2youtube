@@ -43,10 +43,10 @@ export class SpotifyPlaylistPage extends React.Component<Props> {
                                 <i className="fas fa-arrow-left"></i>
                             </button>
                         </div>
-                        <div className="col-sm">
+                        <div className="col-sm text-center">
                             <h2>{this.props.playlist.name}</h2>
                         </div>
-                        <div className="col-sm">
+                        <div className="col-sm text-right">
                             <button type="button" className="btn btn-primary" onClick={e => { this.props.onConvertClick(this.props.playlist, this.props.tracks) }}>Convert to Youtube playlist</button>
                         </div>
                     </div>

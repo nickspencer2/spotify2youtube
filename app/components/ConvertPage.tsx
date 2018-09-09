@@ -2,6 +2,7 @@ import * as React from "react";
 import { google, youtube_v3 } from "googleapis";
 import { OAuth2Client } from "google-auth-library";
 import { AxiosResponse } from "axios";
+import { LoadingScreen } from "./LoadingScreen";
 
 interface Props {
     spotifyPlaylist: any;
@@ -13,6 +14,11 @@ interface Props {
 interface State {
     [field: string]: any;
     youtubePlaylist: AxiosResponse<youtube_v3.Schema$Playlist>;
+    submitted: boolean;
+    playlistStatus: {
+        status: string,
+        successful: boolean
+    }[];
 }
 
 export class ConvertPage extends React.Component<Props, State> {
@@ -22,7 +28,9 @@ export class ConvertPage extends React.Component<Props, State> {
             playlistName: this.props.spotifyPlaylist.name,
             playlistDescription: this.props.spotifyPlaylist.description || `Playlist ${this.props.spotifyPlaylist.name} made by yt2sp`,
             playlistPublic: this.props.spotifyPlaylist.public,
-            youtubePlaylist: null
+            youtubePlaylist: null,
+            submitted: false,
+            playlistStatus: []
         };
     }
 
@@ -34,17 +42,33 @@ export class ConvertPage extends React.Component<Props, State> {
             version: "v3",
             auth: this.props.googleClient
         });
+        this.setState({
+            submitted: true
+        });
         let youtubeTracks: AxiosResponse<youtube_v3.Schema$SearchListResponse>[] = [];
-        for(let i = 0; i < this.props.spotifyTracks.length; i++) {
+        for (let i = 0; i < this.props.spotifyTracks.length; i++) {
             const track = this.props.spotifyTracks[i];
+            const q = `${track.track.name} by ${(track.track.artists as any[]).map((artist: any) => artist.name).join(", ")}`;
             try {
                 const searchResult = await youtube.search.list({
                     part: "snippet",
                     type: "video",
-                    q: `${track.track.name} by ${(track.track.artists as any[]).map((artist: any) => artist.name).join(", ")}`
+                    q: q
+                });
+                this.setState({
+                    playlistStatus: [{
+                        status: `Searching Youtube for ${q}`,
+                        successful: true
+                    }, ...this.state.playlistStatus]
                 });
                 youtubeTracks.push(searchResult);
             } catch (err) {
+                this.setState({
+                    playlistStatus: [{
+                        status: `Searching Youtube for ${q}`,
+                        successful: false
+                    }, ...this.state.playlistStatus]
+                });
                 console.log("Error searching youtube for ", `${track.track.name} by ${(track.track.artists as any[]).map((artist: any) => artist.name).join(", ")}: `, err);
             }
         }
@@ -62,10 +86,17 @@ export class ConvertPage extends React.Component<Props, State> {
                     }
                 }
             } as youtube_v3.Params$Resource$Playlists$Insert);
+            this.setState({
+                playlistStatus: [{
+                    status: `Creating Youtube playlist ${this.state["playlistName"]}`,
+                    successful: true
+                }, ...this.state.playlistStatus]
+            });
 
             // Insert tracks into playlist
-            for(let i = 0; i < youtubeTracks.length; i++) {
+            for (let i = 0; i < youtubeTracks.length; i++) {
                 const youtubeTrack = youtubeTracks[i];
+                const trackName = `${this.props.spotifyTracks[i].track.name} by ${(this.props.spotifyTracks[i].track.artists as any[]).map((artist: any) => artist.name).join(", ")}`;
                 try {
                     const insertResult = await youtube.playlistItems.insert({
                         part: "contentDetails,snippet,status",
@@ -76,7 +107,19 @@ export class ConvertPage extends React.Component<Props, State> {
                             }
                         }
                     });
+                    this.setState({
+                        playlistStatus: [{
+                            status: `Adding track ${trackName} to Youtube playlist`,
+                            successful: true
+                        }, ...this.state.playlistStatus]
+                    });
                 } catch (err) {
+                    this.setState({
+                        playlistStatus: [{
+                            status: `Adding track ${trackName} to Youtube playlist`,
+                            successful: false
+                        }, ...this.state.playlistStatus]
+                    });
                     console.log("Error adding Youtube track ", `${youtubeTrack.data.items[0].snippet.title}: `, err);
                 }
             }
@@ -84,8 +127,14 @@ export class ConvertPage extends React.Component<Props, State> {
             this.setState({
                 youtubePlaylist: youtubePlaylist
             });
-            
+
         } catch (err) {
+            this.setState({
+                playlistStatus: [{
+                    status: `Creating Youtube playlist ${this.state["playlistName"]}`,
+                    successful: false
+                }, ...this.state.playlistStatus]
+            });
             console.log("Error creating Youtube playlist: " + err);
         }
     }
@@ -101,11 +150,21 @@ export class ConvertPage extends React.Component<Props, State> {
     render() {
         return (
             <div className="container-fluid">
-                <button className="btn btn-primary" onClick={this.props.onBackClick}>
-                    <i className="fas fa-arrow-left"></i>
-                </button>
-                    <div className="container">
-                        {!this.state.youtubePlaylist ?
+                <div className="row">
+                    <div className="col">
+                        <button className="btn btn-primary" onClick={this.props.onBackClick}>
+                            <i className="fas fa-arrow-left"></i>
+                        </button>
+                    </div>
+                    {!this.state.submitted &&
+                        <div className="col text-center">
+                            <h1>New Playlist Options</h1>
+                        </div>}
+                    <div className="col" />
+                </div>
+                <div className="row">
+                    <div className="col">
+                        {!this.state.submitted ?
                             <form onSubmit={this.handleSubmit}>
                                 <div className="form-group">
                                     <label htmlFor="playlistName">Playlist Name</label>
@@ -119,16 +178,12 @@ export class ConvertPage extends React.Component<Props, State> {
                                     <label htmlFor="playlistPublic">Public Playlist</label>
                                     <input type="checkbox" className="form-control" id="playlistPublic" placeholder="Public Playlist" onChange={this.handleChange} checked={this.state.playlistPublic} />
                                 </div>
-                                <button type="submit" className="btn btn-primary" onClick={e => {e.preventDefault(); this.handleSubmit();}}>Submit</button>
+                                <button type="submit" className="btn btn-primary" onClick={e => { e.preventDefault(); this.handleSubmit(); }}>Submit</button>
                             </form> :
-                            <div className="row">
-                                <div className="col-sm">
-                                    <p>Playlist created!</p>
-                                    <a href={"https://www.youtube.com/playlist?list=" + this.state.youtubePlaylist.data.id} target="blank">link</a>
-                                </div>
-                            </div>
+                            <LoadingScreen {...this.state} />
                         }
                     </div>
+                </div>
             </div>
         );
     }

@@ -55,6 +55,11 @@ export class SpotifyPlaylistList extends React.Component<Props, State> {
                 <div>
                     <div className="row">
                         <div className="col-sm">
+                            <h1>Playlists</h1>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-sm">
                             <div className="input-group mb-3">
                                 <input type="text" className="form-control" placeholder="Playlist Name" value={this.state.filter} onChange={e => this.handleInputChange(e.target.value)} />
                                 <div className="input-group-append">

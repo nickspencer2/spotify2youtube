@@ -26,7 +26,7 @@ export class ConvertPage extends React.Component<Props, State> {
         super(props);
         this.state = {
             playlistName: this.props.spotifyPlaylist.name,
-            playlistDescription: this.props.spotifyPlaylist.description || `Playlist ${this.props.spotifyPlaylist.name} made by yt2sp`,
+            playlistDescription: this.props.spotifyPlaylist.description || `Playlist ${this.props.spotifyPlaylist.name} made by sp2yt`,
             playlistPublic: this.props.spotifyPlaylist.public,
             youtubePlaylist: null,
             submitted: false,

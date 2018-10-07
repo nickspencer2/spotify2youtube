@@ -61,6 +61,7 @@ export class SpotifyPlaylistList extends React.Component<Props, State> {
                     <div className="row">
                         <div className="col-sm">
                             <div className="input-group mb-3">
+                                {/* tslint:disable-next-line:jsx-no-lambda */}
                                 <input type="text" className="form-control" placeholder="Playlist Name" value={this.state.filter} onChange={e => this.handleInputChange(e.target.value)} />
                                 <div className="input-group-append">
                                     <span className="input-group-text">{this.state.results.length}</span>
@@ -77,6 +78,7 @@ export class SpotifyPlaylistList extends React.Component<Props, State> {
                                             key={`PlaylistButton-${index}`}
                                             type="button"
                                             className="list-group-item list-group-item-action"
+                                            // tslint:disable-next-line:jsx-no-lambda
                                             onClick={e => this.props.handlePlaylistClick(playlist, this.props.spotifyUser)}
                                         >
                                             {playlist.name}

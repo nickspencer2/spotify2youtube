@@ -34,7 +34,7 @@ export class ConvertPage extends React.Component<Props, State> {
         };
     }
 
-    handleSubmit = async (event?: React.FormEvent<HTMLFormElement>) => {
+    handleSubmit = async (event: React.MouseEvent<HTMLButtonElement> | React.FormEvent<HTMLFormElement>) => {
         if (event) {
             event.preventDefault();
         }
@@ -153,7 +153,7 @@ export class ConvertPage extends React.Component<Props, State> {
                 <div className="row">
                     <div className="col">
                         <button className="btn btn-primary" onClick={this.props.onBackClick}>
-                            <i className="fas fa-arrow-left"></i>
+                            <i className="fas fa-arrow-left" />
                         </button>
                     </div>
                     {!this.state.submitted &&
@@ -178,7 +178,7 @@ export class ConvertPage extends React.Component<Props, State> {
                                     <label htmlFor="playlistPublic">Public Playlist</label>
                                     <input type="checkbox" className="form-control" id="playlistPublic" placeholder="Public Playlist" onChange={this.handleChange} checked={this.state.playlistPublic} />
                                 </div>
-                                <button type="submit" className="btn btn-primary" onClick={e => { e.preventDefault(); this.handleSubmit(); }}>Submit</button>
+                                <button type="submit" className="btn btn-primary" onClick={this.handleSubmit}>Submit</button>
                             </form> :
                             <LoadingScreen {...this.state} />
                         }

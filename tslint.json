@@ -1,0 +1,8 @@
+// Taken from https://github.com/Microsoft/TypeScript/blob/master/tslint.json
+{
+    "extends": ["tslint-react"],
+    "rules": {
+        "jsx-wrap-multiline": false,
+        "jsx-no-multiline-js": false
+    }
+}

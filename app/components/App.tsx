@@ -113,7 +113,8 @@ export class App extends React.Component<AppProps, AppState> {
                     spotifyPlaylist={this.state.spotifyPlaylist}
                     spotifyTracks={this.state.spotifyPlaylistTracks}
                     googleClient={this.state.googleClient}
-                    onBackClick={this.onConvertBackClick}/>
+                    onBackClick={this.onConvertBackClick}
+                />
         }
         else if(this.state.currentPage == "SpotifyPlaylistPage") {
             currentPage = 
@@ -124,7 +125,8 @@ export class App extends React.Component<AppProps, AppState> {
                     onConvertClick={this.onConvertClick}
                     tracks={this.state.spotifyPlaylistTracks}
                     onBackClick={this.onSpotifyPlaylistBackClick}
-                    setTracks={this.setSpotifyPlaylistTracks}/>
+                    setTracks={this.setSpotifyPlaylistTracks}
+                />
         }
         else if(this.state.currentPage == "HomePage") {
             currentPage = 
@@ -137,13 +139,15 @@ export class App extends React.Component<AppProps, AppState> {
                     setYoutubeUser={this.setYoutubeUser}
                     setSpotifyUser={this.setSpotifyUser}
                     playlists={this.state.spotifyPlaylists}
-                    setPlaylists={this.setSpotifyPlaylists}/>
+                    setPlaylists={this.setSpotifyPlaylists}
+                />
         }
         else {
             currentPage = 
                 <LandingPage
                     youtubeAuthorized={this.youtubeAuthorized}
-                    spotifyAuthorized={this.spotifyAuthorized}/>    
+                    spotifyAuthorized={this.spotifyAuthorized}
+                />    
         }
         return (
             <div>

@@ -20,11 +20,11 @@ export class SpotifyPlaylistPage extends React.Component<Props> {
 
     async componentWillMount() {
         if (!this.props.tracks) { // Only load playlist's tracks if we haven't before
-            console.log("Loading tracks...")
-            let tracksData = await this.props.spotifyClient.getPlaylistTracks(this.props.spotifyUser.body.id, this.props.playlist.id);
+            console.log("Loading tracks...");
+            let tracksData = await this.props.spotifyClient.getPlaylistTracks(this.props.playlist.id);
             const tracks = [...tracksData.body.items];
             while (tracksData.body.next) {
-                tracksData = await this.props.spotifyClient.getPlaylistTracks(this.props.spotifyUser.body.id, this.props.playlist.id, {
+                tracksData = await this.props.spotifyClient.getPlaylistTracks(this.props.playlist.id, {
                     offset: tracksData.body.offset + tracksData.body.limit
                 });
                 tracks.push(...tracksData.body.items);
@@ -40,13 +40,14 @@ export class SpotifyPlaylistPage extends React.Component<Props> {
                     <div className="row">
                         <div className="col-sm">
                             <button className="btn btn-primary" onClick={this.props.onBackClick}>
-                                <i className="fas fa-arrow-left"></i>
+                                <i className="fas fa-arrow-left" />
                             </button>
                         </div>
                         <div className="col-sm text-center">
                             <h2>{this.props.playlist.name}</h2>
                         </div>
                         <div className="col-sm text-right">
+                            {/* tslint:disable-next-line:jsx-no-lambda */}
                             <button type="button" className="btn btn-primary" onClick={e => { this.props.onConvertClick(this.props.playlist, this.props.tracks) }}>Convert to Youtube playlist</button>
                         </div>
                     </div>

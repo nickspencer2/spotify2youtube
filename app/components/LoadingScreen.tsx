@@ -29,7 +29,7 @@ export class LoadingScreen extends React.PureComponent<Props> {
                                 return (
                                     <li className={`list-group-item ${index == 0 ? "list-group-item-primary" : ""}`} key={`playlistStatus-${index}`}>
                                         {statusItem.status}
-                                        <i style={statusItem.successful ? {color: "green"} : {color: "red"}} className={"fas " + (statusItem.successful ? "fa-check": "fa-exclamation-triangle")}></i>
+                                        <i style={statusItem.successful ? {color: "green"} : {color: "red"}} className={"fas " + (statusItem.successful ? "fa-check": "fa-exclamation-triangle")} />
                                     </li>
                                 );
                             })}

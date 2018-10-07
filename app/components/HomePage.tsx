@@ -42,7 +42,8 @@ export class HomePage extends React.Component<Props> {
                         spotifyClient={this.props.spotifyClient}
                         spotifyUser={this.props.spotifyUser}
                         playlists={this.props.playlists}
-                        setPlaylists={this.props.setPlaylists} /> :
+                        setPlaylists={this.props.setPlaylists} 
+                    /> :
                     <div className="row">
                         <p>Loading current Spotify user...</p>
                     </div>

@@ -49,10 +49,11 @@ export class LandingPage extends React.Component<Props, State> {
                         <button
                             type="button"
                             className="btn btn-outline-danger"
-                            onClick={e => this.handleGoogleAuthClick()}
+                            onClick={this.handleGoogleAuthClick}
                             disabled={this.state.googleClient != null}
-                            style={{width: "83.27px"}}>
-                            <i className="fab fa-youtube"></i>
+                            style={{width: "83.27px"}}
+                        >
+                            <i className="fab fa-youtube" />
                             Login
                         </button>
                     </div>
@@ -65,10 +66,11 @@ export class LandingPage extends React.Component<Props, State> {
                         <button
                             type="button"
                             className="btn btn-outline-success"
-                            onClick={e => this.handleSpotifyAuthClick()}
+                            onClick={this.handleSpotifyAuthClick}
                             disabled={this.state.spotifyClient != null}
-                            style={{width: "83.27px"}}>
-                            <i className="fab fa-spotify"></i>
+                            style={{width: "83.27px"}}
+                        >
+                            <i className="fab fa-spotify" />
                             Login
                         </button>
                     </div>

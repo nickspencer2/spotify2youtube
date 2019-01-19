@@ -6,6 +6,7 @@ import { SpotifyPlaylistPage } from "./SpotifyPlaylistPage";
 import { ConvertPage } from "./ConvertPage";
 import { LandingPage } from "./LandingPage";
 import { Header } from "./Header";
+import { SpotifyPlaylistTrack, SpotifyPlaylistTrackWithInclude } from "app/types/SpotifyTypes";
 
 interface AppProps {
 }
@@ -17,7 +18,7 @@ interface AppState {
     spotifyUser: any;
     youtubeUser: any;
     spotifyPlaylists: any[];
-    spotifyPlaylistTracks: any[];
+    spotifyPlaylistTracks: SpotifyPlaylistTrackWithInclude[];
     currentPage: string;
 }
 
@@ -99,7 +100,15 @@ export class App extends React.Component<AppProps, AppState> {
         })
     }
 
-    setSpotifyPlaylistTracks = (tracks: any[]) => {
+    setSpotifyPlaylistTracks = (tracks: SpotifyPlaylistTrackWithInclude[]) => {
+        this.setState({
+            spotifyPlaylistTracks: tracks
+        });
+    }
+
+    toggleTrackChecked = (index: number) => {
+        let tracks = [...this.state.spotifyPlaylistTracks];
+        tracks[index].include = !tracks[index].include;
         this.setState({
             spotifyPlaylistTracks: tracks
         });
@@ -111,7 +120,7 @@ export class App extends React.Component<AppProps, AppState> {
             currentPage =
                 <ConvertPage
                     spotifyPlaylist={this.state.spotifyPlaylist}
-                    spotifyTracks={this.state.spotifyPlaylistTracks}
+                    spotifyTracks={this.state.spotifyPlaylistTracks.filter(track => track.include)}
                     googleClient={this.state.googleClient}
                     onBackClick={this.onConvertBackClick}
                 />
@@ -126,6 +135,7 @@ export class App extends React.Component<AppProps, AppState> {
                     tracks={this.state.spotifyPlaylistTracks}
                     onBackClick={this.onSpotifyPlaylistBackClick}
                     setTracks={this.setSpotifyPlaylistTracks}
+                    toggleTrackChecked={this.toggleTrackChecked}
                 />
         }
         else if(this.state.currentPage == "HomePage") {

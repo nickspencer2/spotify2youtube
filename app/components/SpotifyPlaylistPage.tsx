@@ -1,13 +1,18 @@
 import * as React from "react";
+import { SpotifyPlaylistTrack, SpotifyPlaylistTrackWithInclude } from "app/types/SpotifyTypes";
 
 interface Props {
     playlist: any;
     spotifyClient: any;
     spotifyUser: any;
+    tracks: SpotifyPlaylistTrackWithInclude[] | null;
+
     onConvertClick: (playlist: any, tracks: any[]) => void;
-    tracks: any[] | null;
-    setTracks: (tracks: any[]) => void;
     onBackClick: () => void;
+    
+    setTracks: (tracks: SpotifyPlaylistTrackWithInclude[]) => void;
+
+    toggleTrackChecked: (index: number) => void;
 }
 
 export class SpotifyPlaylistPage extends React.Component<Props> {
@@ -22,14 +27,19 @@ export class SpotifyPlaylistPage extends React.Component<Props> {
         if (!this.props.tracks) { // Only load playlist's tracks if we haven't before
             console.log("Loading tracks...");
             let tracksData = await this.props.spotifyClient.getPlaylistTracks(this.props.playlist.id);
-            const tracks = [...tracksData.body.items];
+            const tracks: SpotifyPlaylistTrack[] = [...tracksData.body.items];
             while (tracksData.body.next) {
                 tracksData = await this.props.spotifyClient.getPlaylistTracks(this.props.playlist.id, {
                     offset: tracksData.body.offset + tracksData.body.limit
                 });
                 tracks.push(...tracksData.body.items);
             }
-            this.props.setTracks(tracks);
+            this.props.setTracks(tracks.map(track => {
+                return {
+                    include: true,
+                    ...track
+                };
+            }));
         }
     }
 
@@ -54,13 +64,16 @@ export class SpotifyPlaylistPage extends React.Component<Props> {
                     <div className="row">
                         <div className="col-sm">
                             {
-                                this.props.tracks.map((track: any, index: number) =>
+                                this.props.tracks.map((track, index: number) =>
                                     <button
                                         key={`PlaylistButton-${index}`}
                                         type="button"
-                                        className="list-group-item list-group-item-action"
+                                        className={"list-group-item list-group-item-action" + (track.include ? "" : " disabled")}
+                                        // tslint:disable-next-line:jsx-no-lambda
+                                        onClick={event => this.props.toggleTrackChecked(index)}
+                                        style={{textDecoration: (track.include ? "" : "line-through")}}
                                     >
-                                        {track.track.name} by {(track.track.artists as any[]).map((artist: any) => artist.name).join(", ")}
+                                        {track.track.name} by {(track.track.artists).map((artist) => artist.name).join(", ")}
                                     </button>
                                 )
                             }

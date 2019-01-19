@@ -3,10 +3,11 @@ import { google, youtube_v3 } from "googleapis";
 import { OAuth2Client } from "google-auth-library";
 import { AxiosResponse } from "axios";
 import { LoadingScreen } from "./LoadingScreen";
+import { SpotifyPlaylistTrackWithInclude } from "app/types/SpotifyTypes";
 
 interface Props {
     spotifyPlaylist: any;
-    spotifyTracks: any[];
+    spotifyTracks: SpotifyPlaylistTrackWithInclude[];
     googleClient: OAuth2Client;
     onBackClick: () => void;
 }
